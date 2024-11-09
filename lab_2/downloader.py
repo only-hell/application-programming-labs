@@ -4,6 +4,13 @@ from icrawler.builtin import GoogleImageCrawler
 
 
 def download_images(keyword: str, max_images: int, download_directory: str) -> None:
+    '''
+
+    :param keyword:
+    :param max_images:
+    :param download_directory:
+    :return:
+    '''
     os.makedirs(download_directory, exist_ok=True)
 
     try:
