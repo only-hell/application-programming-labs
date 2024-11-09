@@ -1,22 +1,38 @@
 import os
+import argparse
 
 from annotation import create_annotation
 from downloader import download_images
 from iterator import ImageIterator
-from parser import get_args
+
+
+def get_args() -> argparse.Namespace:
+    '''
+
+    :return:
+    '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument("keyword", type=str, help="Keyword of search request")
+    parser.add_argument("-n", "--number", type=int, help="Number of images that you want to download")
+    parser.add_argument("-d", "--imgdir", type=str, help="Path to the folder, where you want to save images")
+    parser.add_argument("-f", "--annotation_file", type=str, help="Path to the annotation file")
+    arguments = parser.parse_args()
+    return arguments
 
 
 def main() -> None:
+    '''
+
+    :return:
+    '''
     args = get_args()
     try:
         download_images(args.keyword, args.number, args.imgdir)
-        # Проверяем, были ли скачаны изображения
-        images = os.listdir(args.imgdir)  # Получаем список файлов в директории с изображениями
+        images = os.listdir(args.imgdir)
         if not (len(images) > 0 and args.number > 0):
             raise FileNotFoundError("Не удалось загрузить изображения")
         create_annotation(args.imgdir, args.annotation_file)
         iterator = ImageIterator(args.annotation_file)
-        # Итерируем по аннотациям и выводим информацию о каждом изображении
         for image_info in iterator:
             print(image_info)
 
