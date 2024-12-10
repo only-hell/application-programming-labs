@@ -1,4 +1,5 @@
 import sys
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, QFileDialog, \
@@ -45,7 +46,7 @@ class DatasetViewer(QMainWindow):
         self.select_directory_btn.clicked.connect(self.choose_dataset_directory)
 
         # Организация компоновки (расположения элементов) в окне
-        layout = QVBoxLayout()
+        layout = QVBoxLayout()  # Вертикальная компоновка (метка + кнопки расположены друг под другом)
         layout.addWidget(self.display_label)
         layout.addWidget(self.next_image_btn)
         layout.addWidget(self.select_directory_btn)
@@ -57,22 +58,18 @@ class DatasetViewer(QMainWindow):
 
     def choose_dataset_directory(self):
         """
-        Функция открытия диалог для выбора директории с изображениями.
+         Функция отображения следующего изображения из выбранного датасета
         :return:
         """
-
-        self.display_label.setText("Selecting directory...")
         dialog_options = QFileDialog.Options()
         dialog_options |= QFileDialog.ReadOnly
-        dialog_options |= QFileDialog.DontUseNativeDialog  # Отключение нативного диалога
+        dialog_options |= QFileDialog.DontUseNativeDialog
         directory = QFileDialog.getExistingDirectory(self, "Select Dataset Directory", "", options=dialog_options)
 
         if directory:
             # Если директория выбрана, создаем итератор
             self.image_iterator = ImageIterator(directory)
             self.show_next_image()
-        else:
-            display_error("No directory selected.")
 
     def show_next_image(self):
         """
@@ -93,7 +90,11 @@ class DatasetViewer(QMainWindow):
             display_error("No more images in the dataset.")
 
 
-if __name__ == "__main__":
+def main():
+    """
+    Функция инициализации приложения
+    :return:
+    """
     try:
         app = QApplication(sys.argv)
         main_window = DatasetViewer()  # Создание главного окна
@@ -101,3 +102,7 @@ if __name__ == "__main__":
         sys.exit(app.exec_())  # Завершаем работу приложения при закрытии окна
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+if __name__ == "__main__":
+    main()
